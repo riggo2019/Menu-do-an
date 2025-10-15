@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu Tình Yêu ❤️</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<style>
+    body {
+        padding-bottom: 80px;
+        /* Tạo khoảng trống cho menu cố định ở cuối trang */
+        background-color: #ffebee;
+        /* Nền màu hồng nhạt, vẫn thuộc tông đỏ */
+    }
+
+    .menu-bg-love {
+        background-color: #e53935;
+        /* Màu đỏ chủ đạo đậm hơn */
+        color: white;
+    }
+
+    h1 {
+        font-family: 'Georgia', serif;
+        /* Font chữ lãng mạn hơn */
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .food-item {
+        cursor: pointer;
+        text-align: center;
+        transition: transform 0.2s, box-shadow 0.2s;
+        position: relative;
+        background-color: white;
+        /* Nền item màu trắng */
+        border-radius: 15px;
+        /* Bo tròn góc nhẹ nhàng */
+        overflow: hidden;
+        /* Đảm bảo ảnh không tràn ra ngoài */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        /* Thêm bóng nhẹ */
+    }
+
+    .food-item:hover {
+        transform: translateY(-5px);
+        /* Hiệu ứng nhấc nhẹ khi rê chuột */
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+
+    .food-item img {
+        width: 200px;
+        /* Tăng kích thước ảnh */
+        height: 200px;
+        /* Tăng kích thước ảnh */
+        object-fit: cover;
+        border-radius: 50%;
+        /* Ảnh món ăn hình tròn */
+        transition: border 0.2s;
+        border: 3px solid transparent;
+        /* Không viền ban đầu */
+        margin-top: 20px;
+        /* Tạo khoảng trống trên ảnh */
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        /* Bóng nhẹ cho ảnh */
+    }
+
+    .food-item .item-info {
+        padding: 15px 10px;
+        color: #333;
+        /* Màu chữ tối hơn cho dễ đọc */
+    }
+
+    .food-item .item-price {
+        color: #d32f2f;
+        /* Màu đỏ đậm cho giá */
+        font-weight: bold;
+        font-size: 1.2em;
+        /* Tăng kích thước chữ giá */
+    }
+
+    .food-item .item-check {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        color: #ff0000;
+        /* Màu xanh lá cây cho icon check */
+        font-size: 30px;
+        /* Icon check lớn hơn */
+        display: none;
+        /* Ban đầu ẩn icon check */
+        z-index: 10;
+        background-color: rgba(255, 255, 255, 0.9);
+        border-radius: 50%;
+        padding: 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Hiệu ứng khi món ăn được chọn */
+    .food-item.selected .food-image {
+        border-color: #d32f2f;
+        /* Viền màu đỏ đậm khi chọn */
+    }
+
+    .food-item.selected .item-check {
+        display: block;
+        /* Hiển thị icon check */
+    }
+
+    /* Điều chỉnh menu cố định */
+    .navbar.fixed-bottom {
+        background-color: #ffcdd2 !important;
+        /* Màu hồng nhạt cho menu dưới */
+    }
+
+    .navbar.fixed-bottom .navbar-text {
+        color: #e53935;
+        /* Màu chữ đỏ cho thông tin */
+        font-size: 1.1em;
+    }
+
+    .navbar.fixed-bottom .btn-danger {
+        background-color: #e53935;
+        border-color: #e53935;
+    }
+
+    /* Điều chỉnh Modal */
+    .modal-content {
+        border-radius: 10px;
+    }
+
+    .modal-header.bg-danger {
+        background-color: #e53935 !important;
+    }
+
+    .btn-close-white {
+        filter: invert(1);
+        /* Chuyển màu trắng cho nút đóng */
+    }
+
+    #selected-items-list .list-group-item {
+        border: none;
+        border-bottom: 1px dashed #eee;
+        /* Viền chấm cho các item trong list */
+    }
+
+    #selected-items-list .list-group-item:last-child {
+        border-bottom: none;
+    }
+</style>
+
+<body>
+
+    <div class="container-fluid py-5 menu-bg-love">
+        <h1 class="text-center mb-4 text-white display-3">❤️ Menu Tình Yêu ❤️</h1>
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4 justify-content-center" id="food-menu">
+        </div>
+    </div>
+
+    <nav class="navbar fixed-bottom navbar-light bg-light border-top shadow-lg">
+        <div class="container-fluid d-flex justify-content-between align-items-center">
+            <span class="navbar-text fw-bold">
+                Số món đã chọn: <span id="item-count" class="text-danger">0</span>
+            </span>
+            <span class="navbar-text fw-bold">
+                Tổng cộng: <span id="total-price" class="text-danger">0</span> Nụ hôn
+            </span>
+            <button class="btn btn-danger btn-lg" id="checkout-btn" disabled>
+                Thanh toán ❤️
+            </button>
+        </div>
+    </nav>
+
+    <div class="modal fade" id="checkout-modal" tabindex="-1" aria-labelledby="checkout-modal-label" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title" id="checkout-modal-label">Thanh toán cho Tình Yêu</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <ul class="list-group" id="selected-items-list">
+                    </ul>
+                    <hr>
+                    <div class="d-flex justify-content-between mt-3">
+                        <strong>Tổng cộng:</strong>
+                        <strong id="final-total-price" class="text-danger">0 Nụ hôn</strong>
+                    </div>
+                    <p class="text-center mt-3 fw-bold text-success">Đã đặt món, <br>Vợ vui lòng thanh toán trước để ck còn đi chợ ❤️</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Giữ nguyên từ câu trả lời trước
+        $(document).ready(function () {
+            const foodItems = [
+                { id: 1, name: 'Canh chua thịt băm đậu phụ', price: 10, image: 'https://cdn2.fptshop.com.vn/unsafe/1920x0/filters:format(webp):quality(75)/2023_10_15_638329689964194738_canh-chua-thit-bam.jpg' },
+                { id: 2, name: 'Thịt băm xào khoai tây', price: 5, image: 'https://img-global.cpcdn.com/recipes/ba37164d7305fab4/680x781cq80/th%E1%BB%8Bt-bam-xao-khoai-tay-recipe-main-photo.jpg' },
+                { id: 3, name: 'Canh rau ngót thịt băm', price: 7, image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTHD2rzTcSqO3HQ4uRuLW1GWrdqHqsnBsEDw&s' },
+                { id: 4, name: 'Gà luộc', price: 14, image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ6DVxEfOs4voFwDAiC1W3c5Te8xepSYR3BLg&s' },
+                { id: 5, name: 'Canh xương nấu bí', price: 8, image: 'https://cdn2.fptshop.com.vn/unsafe/1920x0/filters:format(webp):quality(75)/cach_nau_canh_bi_xanh_voi_xuong_0732920971.jpg' },
+                { id: 6, name: 'Tôm hấp bia', price: 11, image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTDHFTZwptt7mm072u5AVQ9ZercfcHMFoKNwA&s' }
+            ];
+
+            let selectedItems = [];
+
+            const renderFoodItems = () => {
+                const foodMenu = $('#food-menu');
+                foodMenu.empty();
+                foodItems.forEach(item => {
+                    const foodItemHtml = `
+                <div class="col-12 col-sm-6 col-md-4 col-lg-3"> <div class="food-item" data-id="${item.id}" data-name="${item.name}" data-price="${item.price}">
+                        <div class="card-body">
+                            <img src="${item.image}" class="food-image img-fluid" alt="${item.name}">
+                            <i class="fas fa-heart item-check"></i> <div class="item-info">
+                                <h5 class="card-title">${item.name}</h5>
+                                <p class="card-text item-price">${item.price.toLocaleString('vi-VN')} Nụ hôn</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+                    foodMenu.append(foodItemHtml);
+                });
+            };
+
+            const updateBottomMenu = () => {
+                const totalCount = selectedItems.length;
+                const totalPrice = selectedItems.reduce((sum, item) => sum + item.price, 0);
+
+                $('#item-count').text(totalCount);
+                $('#total-price').text(totalPrice.toLocaleString('vi-VN'));
+
+                if (totalCount > 0) {
+                    $('#checkout-btn').prop('disabled', false);
+                } else {
+                    $('#checkout-btn').prop('disabled', true);
+                }
+            };
+
+            $('#food-menu').on('click', '.food-item', function () {
+                const itemId = parseInt($(this).data('id'));
+                const itemName = $(this).data('name');
+                const itemPrice = parseInt($(this).data('price'));
+                const existingItemIndex = selectedItems.findIndex(item => item.id === itemId);
+
+                if (existingItemIndex > -1) {
+                    selectedItems.splice(existingItemIndex, 1);
+                    $(this).removeClass('selected');
+                } else {
+                    selectedItems.push({ id: itemId, name: itemName, price: itemPrice });
+                    $(this).addClass('selected');
+                }
+
+                updateBottomMenu();
+            });
+
+            $('#checkout-btn').on('click', function () {
+                const selectedList = $('#selected-items-list');
+                selectedList.empty();
+
+                let finalTotalPrice = 0;
+                selectedItems.forEach(item => {
+                    selectedList.append(`
+                <li class="list-group-item d-flex justify-content-between">
+                    <span>${item.name}</span>
+                    <span class="fw-bold text-danger">${item.price.toLocaleString('vi-VN')} Nụ hôn</span>
+                </li>
+            `);
+                    finalTotalPrice += item.price;
+                });
+
+                $('#final-total-price').text(finalTotalPrice.toLocaleString('vi-VN') + ' Nụ hôn');
+
+                const checkoutModal = new bootstrap.Modal(document.getElementById('checkout-modal'));
+                checkoutModal.show();
+            });
+
+            renderFoodItems();
+        });
+    </script>
+
+</body>
+
+</html>
